@@ -9,6 +9,9 @@ import {
   IonRefresherContent,
   IonSpinner,
   useIonToast,
+  IonFab,
+  IonFabButton,
+  IonIcon,
 } from "@ionic/react";
 import styled from "@emotion/styled";
 import { css } from "@emotion/react";
@@ -24,6 +27,8 @@ import { useSetActivePage } from "../auth/AppContext";
 import { FeedContext } from "../feed/FeedContext";
 import { jwtSelector } from "../auth/authSlice";
 import { defaultCommentDepthSelector } from "../settings/appearance/appearanceSlice";
+import { chevronDown } from "ionicons/icons";
+import { useCommentFab } from "./useCommentFab";
 
 const centerCss = css`
   position: relative;
@@ -217,10 +222,17 @@ export default function Comments({
     ));
   }, [commentTree, comments.length, highlightedCommentId, loading, op]);
 
+  const bindFabButton = useCommentFab(virtuosoRef);
+
   return (
     <FeedContext.Provider
       value={{ refresh: () => fetchComments(true), appendComments }}
     >
+      <IonFab slot="fixed" vertical="bottom" horizontal="end">
+        <IonFabButton {...bindFabButton}>
+          <IonIcon icon={chevronDown} />
+        </IonFabButton>
+      </IonFab>
       <IonRefresher
         slot="fixed"
         onIonRefresh={handleRefresh}
